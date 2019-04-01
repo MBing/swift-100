@@ -25,6 +25,7 @@ class ViewController: UITableViewController {
                 flags.append(item)
             }
         }
+        flags.sort()
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -33,7 +34,14 @@ class ViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Flag", for: indexPath)
-        cell.textLabel?.text = flags[indexPath.row]
+        let flagText = flags[indexPath.row]
+        if let index = flagText.firstIndex(of: ".") {
+            cell.textLabel?.text = String(flagText[..<index]).uppercased() // 4 -> .png
+        }
+        
+        cell.imageView?.image = UIImage(named: flagText)
+        cell.imageView?.layer.borderWidth = 1
+        cell.imageView?.layer.borderColor = UIColor.lightGray.cgColor
         
         return cell
     }

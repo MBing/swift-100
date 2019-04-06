@@ -12,6 +12,7 @@
 		5A38FB3222589E5A00E27ED5 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5A38FB3022589E5A00E27ED5 /* Main.storyboard */; };
 		5A38FB3422589E5C00E27ED5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5A38FB3322589E5C00E27ED5 /* Assets.xcassets */; };
 		5A38FB3722589E5C00E27ED5 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5A38FB3522589E5C00E27ED5 /* LaunchScreen.storyboard */; };
+		5A38FB3F22591F3600E27ED5 /* websites.csv in Resources */ = {isa = PBXBuildFile; fileRef = 5A38FB3E22591F3600E27ED5 /* websites.csv */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,6 +23,7 @@
 		5A38FB3322589E5C00E27ED5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		5A38FB3622589E5C00E27ED5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		5A38FB3822589E5C00E27ED5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		5A38FB3E22591F3600E27ED5 /* websites.csv */ = {isa = PBXFileReference; lastKnownFileType = text; path = websites.csv; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,6 +62,7 @@
 				5A38FB3322589E5C00E27ED5 /* Assets.xcassets */,
 				5A38FB3522589E5C00E27ED5 /* LaunchScreen.storyboard */,
 				5A38FB3822589E5C00E27ED5 /* Info.plist */,
+				5A38FB3E22591F3600E27ED5 /* websites.csv */,
 			);
 			path = "5 WebView";
 			sourceTree = "<group>";
@@ -122,6 +125,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5A38FB3F22591F3600E27ED5 /* websites.csv in Resources */,
 				5A38FB3722589E5C00E27ED5 /* LaunchScreen.storyboard in Resources */,
 				5A38FB3422589E5C00E27ED5 /* Assets.xcassets in Resources */,
 				5A38FB3222589E5A00E27ED5 /* Main.storyboard in Resources */,

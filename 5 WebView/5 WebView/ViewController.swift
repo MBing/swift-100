@@ -9,19 +9,33 @@
 import UIKit
 import WebKit
 
-class ViewController: UIViewController, WKNavigationDelegate {
+class ViewController: UITableViewController, WKNavigationDelegate {
     var webView: WKWebView!
     var progressView: UIProgressView!
-    var websites = ["martinbing.com","apple.com", "hackingwithswift.com", "bad.site.hello"]
+    var websites = [String]()
     
-    override func loadView() {
-        webView = WKWebView()
-        webView.navigationDelegate = self
-        view = webView
-    }
+    // This is only needed when you want to load the webview instantly,
+    // in this iteration, we need a table to show and will render the webview on didSelectRowAt
+//    override func loadView() {
+//        webView = WKWebView()
+//        webView.navigationDelegate = self
+//        view = webView
+//    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        title = "Select a Website below"
+        
+        if let path = Bundle.main.path(forResource: "websites", ofType: "csv") {
+            guard let data = try? Data(contentsOf: URL(fileURLWithPath: path)) else { return }
+            guard let dataEnc = String(data: data, encoding: .utf8) else { return }
+            let items = dataEnc.components(separatedBy: ", ")
+            
+            for item in items {
+                websites.append(item)
+            }
+        }
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Open", style: .plain, target: self, action: #selector(openTapped))
 
@@ -36,9 +50,26 @@ class ViewController: UIViewController, WKNavigationDelegate {
         
         toolbarItems = [goBack, goForward, progressButton, spacer, refresh]
         navigationController?.isToolbarHidden = false
+    }
+    
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return websites.count
+    }
+    
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "Website", for: indexPath)
+        cell.textLabel?.text = websites[indexPath.row]
+        
+        return cell
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        webView = WKWebView()
+        webView.navigationDelegate = self
+        view = webView
         webView.addObserver(self, forKeyPath: #keyPath(WKWebView.estimatedProgress), options: .new, context: nil)
-
-        let url = URL(string: "https://\(websites[0])")!
+        
+        let url = URL(string: "https://\(websites[indexPath.row])")!
         webView.load(URLRequest(url: url))
         webView.allowsBackForwardNavigationGestures = true
     }

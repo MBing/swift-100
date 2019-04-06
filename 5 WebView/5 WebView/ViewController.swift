@@ -12,7 +12,7 @@ import WebKit
 class ViewController: UIViewController, WKNavigationDelegate {
     var webView: WKWebView!
     var progressView: UIProgressView!
-    var websites = ["martinbing.com","apple.com", "hackingwithswift.com"]
+    var websites = ["martinbing.com","apple.com", "hackingwithswift.com", "bad.site.hello"]
     
     override func loadView() {
         webView = WKWebView()
@@ -27,12 +27,14 @@ class ViewController: UIViewController, WKNavigationDelegate {
 
         let spacer = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
         let refresh = UIBarButtonItem(barButtonSystemItem: .refresh, target: webView, action: #selector(webView.reload))
+        let goBack = UIBarButtonItem(barButtonSystemItem: .undo, target: webView, action: #selector(webView.goBack))
+        let goForward = UIBarButtonItem(barButtonSystemItem: .redo, target: webView, action: #selector(webView.goForward))
         
         progressView = UIProgressView(progressViewStyle: .default)
         progressView.sizeToFit()
         let progressButton = UIBarButtonItem(customView: progressView)
         
-        toolbarItems = [progressButton, spacer, refresh]
+        toolbarItems = [goBack, goForward, progressButton, spacer, refresh]
         navigationController?.isToolbarHidden = false
         webView.addObserver(self, forKeyPath: #keyPath(WKWebView.estimatedProgress), options: .new, context: nil)
 
@@ -81,6 +83,12 @@ class ViewController: UIViewController, WKNavigationDelegate {
                 }
             }
         }
+        
+        let ac = UIAlertController(title: "Blocked Site", message: "This website is not allowed to visit!", preferredStyle: .alert)
+        ac.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+        ac.popoverPresentationController?.barButtonItem = navigationItem.rightBarButtonItem
+        
+        present(ac, animated: true)
         decisionHandler(.cancel)
     }
 }

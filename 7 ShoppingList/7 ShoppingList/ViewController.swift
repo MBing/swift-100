@@ -17,6 +17,10 @@ class ViewController: UITableViewController {
         title = "Shopping List"
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addItem))
         navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(removeItems))
+        
+        let share = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(shareList))
+        toolbarItems = [share]
+        navigationController?.isToolbarHidden = false
     }
 
 
@@ -63,7 +67,14 @@ class ViewController: UITableViewController {
         ac.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         
         present(ac, animated: true)
+    }
+    
+    @objc func shareList() {
+        let list = shoppingList.joined(separator: "\n")
+        let vc = UIActivityViewController(activityItems: [list], applicationActivities: [])
+        vc.popoverPresentationController?.barButtonItem = navigationItem.rightBarButtonItem
         
+        present(vc, animated: true)
     }
 }
 

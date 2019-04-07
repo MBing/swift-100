@@ -16,6 +16,7 @@ class ViewController: UITableViewController {
         super.viewDidLoad()
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(promptForAnswer))
+        navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .play, target: self, action: #selector(startGame))
         
         if let startWordsURL = Bundle.main.url(forResource: "start", withExtension: "txt") {
             guard let startWords = try? String(contentsOf: startWordsURL) else { return }
@@ -29,7 +30,7 @@ class ViewController: UITableViewController {
         startGame()
     }
 
-    func startGame() {
+    @objc func startGame() {
         title = allWords.randomElement()
         usedWords.removeAll(keepingCapacity: true)
         tableView.reloadData()
@@ -68,30 +69,43 @@ class ViewController: UITableViewController {
         if isPossible(word: lowerAnswer) {
             if isOriginal(word: lowerAnswer) {
                 if isReal(word: lowerAnswer) {
-                    usedWords.insert(answer, at: 0)
+                    if lowerAnswer.count <= 3 {
+                        errorTitle = "Word 3 or less chars"
+                        errorMessage = "The answer needs to be larger than 3 chars"
+                        showErrorMessage(errorTitle: errorTitle, errorMessage: errorMessage)
+                        
+                        return
+                    }
+                    
+                    if (title?.lowercased().hasPrefix(answer))! {
+                        errorTitle = "Word prefix"
+                        errorMessage = "The answer can not be a prefix of the word"
+                        showErrorMessage(errorTitle: errorTitle, errorMessage: errorMessage)
+                        
+                        return
+                    }
+                    usedWords.insert(lowerAnswer, at: 0)
                     
                     let indexPath = IndexPath(row: 0, section: 0)
                     tableView.insertRows(at: [indexPath], with: .automatic)
                     
-                    return 
+                    return
                 } else {
                     errorTitle = "Word not recognized"
                     errorMessage = "You can't just make them up, you know!"
+                    showErrorMessage(errorTitle: errorTitle, errorMessage: errorMessage)
                 }
             } else {
                 errorTitle = "Word already used"
                 errorMessage = "Be more original!"
+                showErrorMessage(errorTitle: errorTitle, errorMessage: errorMessage)
             }
         } else {
             guard let title = title else { return }
             errorTitle = "Word not possible"
             errorMessage = "You can't spell that word from \(title.lowercased())."
+            showErrorMessage(errorTitle: errorTitle, errorMessage: errorMessage)
         }
-        
-        let ac = UIAlertController(title: errorTitle, message: errorMessage, preferredStyle: .alert)
-        ac.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
-        
-        present(ac, animated: true)
     }
     
     func isPossible(word: String) -> Bool {
@@ -118,6 +132,13 @@ class ViewController: UITableViewController {
         let misspelledRange = checker.rangeOfMisspelledWord(in: word, range: range, startingAt: 0, wrap: false, language: "en")
         
         return misspelledRange.location == NSNotFound
+    }
+    
+    func showErrorMessage(errorTitle: String, errorMessage: String) {
+        let ac = UIAlertController(title: errorTitle, message: errorMessage, preferredStyle: .alert)
+        ac.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+        
+        present(ac, animated: true)
     }
 }
 

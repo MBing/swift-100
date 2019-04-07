@@ -27,14 +27,13 @@ class ViewController: UITableViewController, WKNavigationDelegate {
         
         title = "Select a Website below"
         
-        if let path = Bundle.main.path(forResource: "websites", ofType: "csv") {
-            guard let data = try? Data(contentsOf: URL(fileURLWithPath: path)) else { return }
-            guard let dataEnc = String(data: data, encoding: .utf8) else { return }
-            let items = dataEnc.components(separatedBy: ", ")
-            
-            for item in items {
-                websites.append(item)
-            }
+        if let websitesURL = Bundle.main.url(forResource: "websites", withExtension: "csv") {
+            guard let data = try? String(contentsOf: websitesURL) else { return }
+            websites = data.components(separatedBy: ", ")
+        }
+        
+        if websites.isEmpty {
+            websites = ["apple.com"]
         }
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Open", style: .plain, target: self, action: #selector(openTapped))

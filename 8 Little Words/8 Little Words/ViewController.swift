@@ -64,12 +64,16 @@ class ViewController: UIViewController {
         submit.translatesAutoresizingMaskIntoConstraints = false
         submit.setTitle("SUBMIT", for: .normal)
         submit.addTarget(self, action: #selector(submitTapped), for: .touchUpInside)
+        submit.layer.borderWidth = 1
+        submit.layer.borderColor = UIColor.gray.cgColor
         view.addSubview(submit)
         
         let clear = UIButton(type: .system)
         clear.translatesAutoresizingMaskIntoConstraints = false
         clear.setTitle("CLEAR", for: .normal)
         clear.addTarget(self, action: #selector(clearTapped), for: .touchUpInside)
+        clear.layer.borderWidth = 1
+        clear.layer.borderColor = UIColor.gray.cgColor
         view.addSubview(clear)
         
         let buttonsView = UIView()
@@ -161,12 +165,20 @@ class ViewController: UIViewController {
             currentAnswer.text = ""
             score += 1
             
-            if score % 7 == 0 {
+            // Going to another level without having an amount of points reached doesn't make sense
+            // You should not move up on an amount of attempts, as you do not prove then that you are worthy to level up
+            if score % 7 == 0 && score > 0 {
                 let ac = UIAlertController(title: "Well done!", message: "Are you ready for the next level?", preferredStyle: .alert)
                 ac.addAction(UIAlertAction(title: "Let's Go!", style: .default, handler: levelUp))
-                
                 present(ac, animated: true)
             }
+        } else {
+            let ac = UIAlertController(title: "Failure", message: "This is not a correct answer!", preferredStyle: .alert)
+            ac.addAction(UIAlertAction(title: "Try Again!", style: .default) { _ in
+                self.score -= 1
+            })
+            
+            present(ac, animated: true)
         }
     }
     

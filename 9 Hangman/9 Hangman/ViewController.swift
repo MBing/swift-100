@@ -94,11 +94,18 @@ class ViewController: UIViewController, UITextFieldDelegate {
 
         ])
         
-        guard let url = Bundle.main.url(forResource: "words", withExtension: "txt") else { return }
-        guard let contents = try? String(contentsOf: url) else { return }
-        wordsList = contents.components(separatedBy: "\n").filter{ !$0.isEmpty } // last filter, makes sure no empty values are added to the Array
-
-        loadNewGame()
+        loadWords()
+    }
+    
+    func loadWords() {
+        DispatchQueue.global().async { [weak self] in
+            guard let url = Bundle.main.url(forResource: "words", withExtension: "txt") else { return }
+            guard let contents = try? String(contentsOf: url) else { return }
+            self?.wordsList = contents.components(separatedBy: "\n").filter{ !$0.isEmpty } // last filter, makes sure no empty values are added to the Array
+            DispatchQueue.main.async {
+                self?.loadNewGame()
+            }
+        }
     }
     
     override func viewDidLoad() {

@@ -15,6 +15,11 @@ class ViewController: UICollectionViewController, UIImagePickerControllerDelegat
         super.viewDidLoad()
         
         navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addNewPerson))
+        
+        // Camera doesn't work on the simulator, so make sure to check and only display if the feature is available
+        if UIImagePickerController.isSourceTypeAvailable(.camera) {
+            navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .camera, target: self, action: #selector(addCameraPicture))
+        }
     }
 
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -68,6 +73,19 @@ class ViewController: UICollectionViewController, UIImagePickerControllerDelegat
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let person = people[indexPath.item]
         
+        let ac = UIAlertController(title: "Choose Action", message: nil, preferredStyle: .alert)
+        ac.addAction(UIAlertAction(title: "Rename Person", style: .default) { [weak self] _ in
+            self?.renamePerson(person: person)
+        })
+        ac.addAction(UIAlertAction(title: "Delete", style: .destructive) { [weak self] _ in
+            // delete the item
+            self?.people.remove(at: indexPath.item)
+            collectionView.reloadData()
+        })
+        present(ac, animated: true)
+    }
+    
+    func renamePerson(person: Person) {
         let ac = UIAlertController(title: "Rename Person", message: nil, preferredStyle: .alert)
         ac.addTextField()
         
@@ -80,6 +98,15 @@ class ViewController: UICollectionViewController, UIImagePickerControllerDelegat
         
         ac.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         present(ac, animated: true)
+    }
+    
+    @objc func addCameraPicture() {
+        let picker = UIImagePickerController()
+        picker.sourceType = .camera
+        picker.allowsEditing = true
+        picker.delegate = self
+        
+        present(picker, animated: true)
     }
 }
 
